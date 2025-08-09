@@ -23,7 +23,7 @@ de todos los cursos.
 
 
 
-Pseudocodigo
+## Pseudocodigo
 
 INICIO
 
