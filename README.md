@@ -44,8 +44,6 @@ Este programa es útil porque, al estar basado en consola y organizado con un me
 
 INICIO
 
-  INICIO
-    
     repetir = VERDADERO
 
     MIENTRAS repetir HACER
@@ -97,7 +95,6 @@ INICIO
             IMPRIMIR "Opción inválida, intente nuevamente."
         FIN_SI
     FIN_MIENTRAS
+    FIN
 
-FIN
 
-FIN
