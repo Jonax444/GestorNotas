@@ -23,8 +23,12 @@ de todos los cursos.
 
 
 
+Pseudocodigo
+
 INICIO
+
     MIENTRAS VERDADERO HACER
+    
         IMPRIMIR "====== GESTOR DE NOTAS ACADÉMICAS ======"
         IMPRIMIR "1. Registrar nuevo curso"
         IMPRIMIR "2. Mostrar todos los cursos y notas"
