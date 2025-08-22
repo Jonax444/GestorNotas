@@ -1,0 +1,82 @@
+// ===================== PSEUDOCÓDIGO =====================
+// Proyecto: Registro de Notas y Promedio
+// // Autor: Jonathan Barrera
+// Descripción: Programa que permite registrar varias notas,
+//              calcular el promedio y mostrar los resultados.
+// =========================================================
+
+
+// ---------------------- PROCEDIMIENTOS ----------------------
+
+PROCEDIMIENTO mTitulo()
+// PRE: ---
+// POST: Muestra el título del programa
+    IMPRIMIR "=== Registro de Notas y Promedio ==="
+FIN_PROCEDIMIENTO
+
+
+// ---------------------- FUNCIONES ----------------------
+
+FUNCION validarNota(n) : LOGICO
+// PRE: n es un valor ingresado por el usuario
+// POST: Retorna VERDADERO si n es numérico y está en el rango [0,100], FALSO en otro caso
+    SI n >= 0 Y n <= 100 ENTONCES
+        RETORNAR VERDADERO
+    SINO
+        RETORNAR FALSO
+    FIN_SI
+FIN_FUNCION
+
+
+FUNCION calcularPromedio(listaNotas) : REAL
+// PRE: listaNotas no está vacía, cada elemento ∈ [0,100]
+// POST: Retorna el promedio real de todas las notas
+    suma ← 0
+    cantidad ← LONGITUD(listaNotas)
+    PARA cada nota EN listaNotas HACER
+        suma ← suma + nota
+    FIN_PARA
+    RETORNAR suma / cantidad
+FIN_FUNCION
+
+
+// ---------------------- PROCEDIMIENTOS ----------------------
+
+PROCEDIMIENTO mostrarResumen(listaNotas, promedio)
+// PRE: listaNotas contiene valores numéricos válidos, promedio calculado
+// POST: Imprime las notas y el promedio
+    IMPRIMIR "Notas registradas: ", listaNotas
+    IMPRIMIR "Promedio: ", promedio
+FIN_PROCEDIMIENTO
+
+
+// ===================== PROGRAMA PRINCIPAL =====================
+
+INICIO
+
+    mostrarTitulo()
+
+    listaNotas ← []
+
+    IMPRIMIR "Ingrese notas (escriba -1 para terminar):"
+
+    LEER nota
+
+    MIENTRAS nota <> -1 HACER
+        SI validarNota(nota) = VERDADERO ENTONCES
+            AGREGAR nota A listaNotas
+        SINO
+            IMPRIMIR "Nota inválida. Ingrese un valor entre 0 y 100."
+        FIN_SI
+
+        LEER nota
+    FIN_MIENTRAS
+
+    SI LONGITUD(listaNotas) > 0 ENTONCES
+        promedio ← calcularPromedio(listaNotas)
+        mostrarResumen(listaNotas, promedio)
+    SINO
+        IMPRIMIR "No se ingresaron notas válidas."
+    FIN_SI
+
+FIN
