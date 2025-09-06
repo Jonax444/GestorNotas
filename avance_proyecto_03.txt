@@ -1,0 +1,66 @@
+from operator import truediv
+def pedir_curso():
+    print("===== REGISTRO DE CURSOS Y NOTAS =====")
+    nombre = input("Ingrese el nombre del curso: ")
+    nota = float(input("Ingrese la nota: "))
+    return {"nombre": nombre, "nota": nota}
+
+cursos = []
+
+repetir = True
+while repetir:
+    print("===== GESTOR DE NOTAS ACADÉMICAS ====")
+    print("1. Registrar nuevo curso y nota")
+    print("2. Mostrar todos los cursos y notas")
+    print("3. Calcular promedio general")
+    print("4. Contar cursos aprobados y reprobados")
+    print("5. Buscar curso por nombre ")
+    print("6. Actualizar nota de un curso")
+    print("7. Eliminar un curso")
+    print("8. Ordenar cursos por nota ")
+    print("9. Ordenar cursos por nombre ")
+    print("10. Simular cola de solicitudes de revisión")
+    print("11. Mostrar historial de cambios ")
+    print("12. Salir")
+
+
+    opcion = int(input("Seleccione una opción: "))
+
+    if opcion == 1:
+        print("Registrar nuevo curso")
+        curso = pedir_curso()  # Guardar el curso en una variable
+        cursos.append(curso)  # Agregarlo a la lista
+        print("Curso guardado.\n")
+
+    elif opcion == 2:
+        print("Mostrar todos los cursos y notas")
+        if cursos:
+            for i, c in enumerate(cursos, start=1):
+                print(f"{i}. {c['nombre']} - {c['nota']}")
+        else:
+            print("No hay cursos registrados.")
+        print()
+
+    elif opcion == 3:
+        print(" Calcular promedio general")
+    elif opcion == 4:
+        print("Contar cursos aprobados y reprobados")
+    elif opcion == 5:
+        print("Buscar curso por nombre")
+    elif opcion == 6:
+        print("Actualizar nota de un curso")
+    elif opcion == 7:
+        print("Eliminar un curso")
+    elif opcion == 8:
+        print("Ordenar cursos por nota")
+    elif opcion == 9:
+        print("Ordenar cursos por nombre")
+    elif opcion == 10:
+        print("Simular cola de solicitudes de revisión")
+    elif opcion == 11:
+        print("Mostrar historial de cambios")
+    elif opcion == 12:
+        print("Saliendo del programa...")
+        repetir = False
+    else:
+        print(" Opción no válida, intente de nuevo.")
