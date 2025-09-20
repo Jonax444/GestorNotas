@@ -169,7 +169,7 @@ def busqueda_binaria(cursos, busqueda):
 
 
 cursos = []
-orden_alfabetico = []
+
 
 repetir = True
 while repetir:
@@ -344,3 +344,4 @@ while repetir:
         repetir = False
     else:
         print(" Opción no válida, intente de nuevo.")
+
