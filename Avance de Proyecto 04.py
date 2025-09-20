@@ -100,9 +100,9 @@ def preguntar_continuar():
     while True:
         respuesta = input("¿Desea realizar otra acción dentro de esta opción? (S/N): ").upper()
         if respuesta in ["SI", "S"]:
-            return True  # Continúa
+            return True
         elif respuesta in ["NO", "N"]:
-            return False  # Sale de la opción
+            return False
         else:
             print("Respuesta inválida")
 
@@ -121,7 +121,6 @@ def ordenar_curso(cursos):
 
 
 def verificar_orden_alfabetico(cursos):
-    """Verifica si los cursos están ordenados alfabéticamente"""
     if len(cursos) <= 1:
         return True
 
@@ -150,7 +149,6 @@ def busqueda_binaria(cursos, busqueda):
         print(f"Comparación #{comparaciones}: Posición {medio} - '{curso_medio['nombre']}'")
 
         if nombre_medio == busqueda_lower:
-            # Curso encontrado
             estado = "APROBADO" if curso_medio['nota'] >= 61 else "REPROBADO"
             print(f"\n ¡CURSO ENCONTRADO en {comparaciones} comparaciones!")
             print(f"Nombre: {curso_medio['nombre']}")
@@ -217,7 +215,6 @@ while repetir:
             else:
                 nombre_curso = input("Ingrese el nombre del curso: ")
 
-                # Solicitar nueva nota con validación
                 while True:
                     try:
                         nueva_nota = float(input("Ingrese la nueva nota (0-100): "))
@@ -228,7 +225,6 @@ while repetir:
                     except ValueError:
                         print("Por favor ingrese un número válido")
 
-                # Usar la función existente
                 if actualizar_nota_curso(cursos, nombre_curso, nueva_nota):
                     print("Nota actualizada correctamente")
                     Mostrar_actualizacion()
@@ -303,16 +299,13 @@ while repetir:
         while True:
             print("BÚSQUEDA BINARIA POR NOMBRE ")
 
-            # Verificar si hay cursos registrados
             if not cursos:
                 print("No hay cursos registrados")
                 break
 
-            # Mostrar cursos actuales
             print("Cursos actuales:")
             Mostrar_curso()
 
-            # Verificar si está ordenado alfabéticamente
             if not verificar_orden_alfabetico(cursos):
                 print("  ADVERTENCIA: Los cursos no están ordenados alfabéticamente")
                 print("La búsqueda binaria requiere que la lista esté ordenada por nombre")
@@ -320,18 +313,16 @@ while repetir:
                 print("Búsqueda binaria cancelada")
                 break
 
-            # Realizar búsqueda binaria
             print("\n--- BÚSQUEDA BINARIA ---")
             busqueda = input("Ingrese el nombre exacto del curso a buscar: ").strip()
 
-            if busqueda:  # Verificar que no esté vacío
+            if busqueda:
                 print(f"\nIniciando búsqueda binaria de: '{busqueda}'")
                 print("-" * 50)
                 busqueda_binaria(cursos, busqueda)
             else:
                 print("Nombre de curso no puede estar vacío")
 
-            # Preguntar si desea continuar
             if not preguntar_continuar():
                 break
 
@@ -344,4 +335,3 @@ while repetir:
         repetir = False
     else:
         print(" Opción no válida, intente de nuevo.")
-
