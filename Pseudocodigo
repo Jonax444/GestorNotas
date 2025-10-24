@@ -1,0 +1,708 @@
+#  Pseudocódigo - Gestor de Notas Académicas
+
+```text
+PSEUDOCÓDIGO - GESTOR DE NOTAS ACADÉMICAS
+ESTRUCTURAS DE DATOS PRINCIPALES
+cursos[] = lista vacía de diccionarios
+    // Cada elemento: {nombre: string, nota: float}
+
+historial_cambios[] = pila vacía de diccionarios
+    // Cada elemento: {tipo: string, detalles: string, fecha: string}
+
+1. MOSTRAR MENÚ PRINCIPAL
+FUNCIÓN MostrarMenu()
+    IMPRIMIR "===== GESTOR DE NOTAS ACADÉMICAS ===="
+    IMPRIMIR "1. Registrar nuevo curso y nota"
+    IMPRIMIR "2. Mostrar todos los cursos y notas"
+    IMPRIMIR "3. Calcular promedio general"
+    IMPRIMIR "4. Contar cursos aprobados y reprobados"
+    IMPRIMIR "5. Buscar curso por nombre (Lineal)"
+    IMPRIMIR "6. Actualizar nota de un curso"
+    IMPRIMIR "7. Eliminar un curso"
+    IMPRIMIR "8. Ordenar cursos por nota"
+    IMPRIMIR "9. Ordenar cursos por nombre"
+    IMPRIMIR "10. Buscar curso por nombre (Binaria)"
+    IMPRIMIR "11. Simular cola de solicitudes de revisión"
+    IMPRIMIR "12. Mostrar historial de cambios"
+    IMPRIMIR "13. Salir"
+FIN FUNCIÓN
+
+2. REGISTRO Y VISUALIZACIÓN
+2.1 Pedir Curso
+FUNCIÓN PedirCurso() → diccionario
+    IMPRIMIR "REGISTRO DE CURSO Y NOTA"
+    
+    nombre ← LEER texto del usuario
+    nombre ← ELIMINAR espacios en blanco
+    
+    REPETIR
+        INTENTAR
+            IMPRIMIR "Ingrese la nota (0-100)"
+            nota ← LEER número decimal
+            
+            SI (nota >= 0 Y nota <= 100) ENTONCES
+                SALIR del bucle
+            SINO
+                IMPRIMIR "ERROR: Nota debe estar entre 0 y 100"
+            FIN SI
+        CAPTURAR error de conversión
+            IMPRIMIR "ERROR: Ingrese un número válido"
+        FIN CAPTURA
+    HASTA que nota sea válida
+    
+    RETORNAR {nombre: nombre, nota: nota}
+FIN FUNCIÓN
+2.2 Mostrar Cursos
+FUNCIÓN MostrarCurso()
+    IMPRIMIR "CURSOS Y NOTAS REGISTRADOS"
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR encabezado de tabla
+    
+    PARA i DESDE 0 HASTA longitud(cursos)-1 HACER
+        curso ← cursos[i]
+        
+        SI curso.nota >= 60 ENTONCES
+            estado ← "APROBADO"
+        SINO
+            estado ← "REPROBADO"
+        FIN SI
+        
+        IMPRIMIR i+1, curso.nombre, curso.nota, estado
+    FIN PARA
+FIN FUNCIÓN
+
+3. CÁLCULOS ESTADÍSTICOS
+3.1 Calcular Promedio
+FUNCIÓN Promedio()
+    IMPRIMIR "CÁLCULO DE PROMEDIO GENERAL"
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR
+    FIN SI
+    
+    suma ← 0
+    
+    PARA CADA curso EN cursos HACER
+        suma ← suma + curso.nota
+    FIN PARA
+    
+    promedio ← suma / longitud(cursos)
+    
+    SI promedio >= 60 ENTONCES
+        estado ← "APROBADO"
+    SINO
+        estado ← "REPROBADO"
+    FIN SI
+    
+    IMPRIMIR "Promedio general:", promedio
+    IMPRIMIR "Estado:", estado
+    IMPRIMIR "Cantidad de cursos:", longitud(cursos)
+FIN FUNCIÓN
+3.2 Contar Aprobados y Reprobados
+FUNCIÓN AprobadosReprobados()
+    IMPRIMIR "ESTADÍSTICAS DE APROBACIÓN"
+    
+    aprobados ← 0
+    reprobados ← 0
+    
+    PARA CADA curso EN cursos HACER
+        SI curso.nota >= 60 ENTONCES
+            aprobados ← aprobados + 1
+        SINO
+            reprobados ← reprobados + 1
+        FIN SI
+    FIN PARA
+    
+    IMPRIMIR "Nota mínima para aprobar: 60"
+    IMPRIMIR "Cursos APROBADOS:", aprobados
+    IMPRIMIR "Cursos REPROBADOS:", reprobados
+    IMPRIMIR "Total de cursos:", longitud(cursos)
+FIN FUNCIÓN
+
+4. BÚSQUEDA
+4.1 Búsqueda Lineal (Secuencial)
+FUNCIÓN BusquedaCursoLineal(cursos[], busqueda) → booleano
+    // Complejidad: O(n)
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR falso
+    FIN SI
+    
+    PARA CADA curso EN cursos HACER
+        SI minúsculas(curso.nombre) = minúsculas(busqueda) ENTONCES
+            IMPRIMIR "CURSO ENCONTRADO:"
+            IMPRIMIR "Nombre:", curso.nombre
+            IMPRIMIR "Nota:", curso.nota
+            
+            SI curso.nota >= 60 ENTONCES
+                IMPRIMIR "Estado: APROBADO"
+            SINO
+                IMPRIMIR "Estado: REPROBADO"
+            FIN SI
+            
+            RETORNAR verdadero
+        FIN SI
+    FIN PARA
+    
+    IMPRIMIR "El curso no está registrado"
+    RETORNAR falso
+FIN FUNCIÓN
+4.2 Búsqueda Binaria (Requiere orden alfabético)
+FUNCIÓN BusquedaBinaria(cursos[], busqueda) → booleano
+    // Complejidad: O(log n)
+    // PRECONDICIÓN: cursos debe estar ordenado alfabéticamente
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR falso
+    FIN SI
+    
+    izquierda ← 0
+    derecha ← longitud(cursos) - 1
+    busqueda ← minúsculas(busqueda)
+    comparaciones ← 0
+    
+    MIENTRAS izquierda <= derecha HACER
+        medio ← (izquierda + derecha) / 2  // División entera
+        curso_medio ← cursos[medio]
+        nombre_medio ← minúsculas(curso_medio.nombre)
+        comparaciones ← comparaciones + 1
+        
+        IMPRIMIR "Comparación #", comparaciones, ": Posición", medio
+        
+        SI nombre_medio = busqueda ENTONCES
+            IMPRIMIR "CURSO ENCONTRADO en", comparaciones, "comparaciones"
+            IMPRIMIR "Nombre:", curso_medio.nombre
+            IMPRIMIR "Nota:", curso_medio.nota
+            
+            SI curso_medio.nota >= 60 ENTONCES
+                IMPRIMIR "Estado: APROBADO"
+            SINO
+                IMPRIMIR "Estado: REPROBADO"
+            FIN SI
+            
+            IMPRIMIR "Posición en la lista:", medio + 1
+            RETORNAR verdadero
+            
+        SINO SI nombre_medio < busqueda ENTONCES
+            IMPRIMIR "Buscar en mitad derecha"
+            izquierda ← medio + 1
+            
+        SINO
+            IMPRIMIR "Buscar en mitad izquierda"
+            derecha ← medio - 1
+        FIN SI
+    FIN MIENTRAS
+    
+    IMPRIMIR "Curso no encontrado después de", comparaciones, "comparaciones"
+    RETORNAR falso
+FIN FUNCIÓN
+4.3 Verificar Orden Alfabético
+FUNCIÓN VerificarOrdenAlfabetico(cursos[]) → booleano
+    SI longitud(cursos) <= 1 ENTONCES
+        RETORNAR verdadero
+    FIN SI
+    
+    PARA i DESDE 0 HASTA longitud(cursos)-2 HACER
+        SI minúsculas(cursos[i].nombre) > minúsculas(cursos[i+1].nombre) ENTONCES
+            RETORNAR falso
+        FIN SI
+    FIN PARA
+    
+    RETORNAR verdadero
+FIN FUNCIÓN
+
+5. ACTUALIZACIÓN Y ELIMINACIÓN
+5.1 Actualizar Nota
+FUNCIÓN ActualizarNotaCurso(cursos[], nombre_curso, nota_nueva) → booleano
+    PARA CADA curso EN cursos HACER
+        SI minúsculas(curso.nombre) = minúsculas(nombre_curso) ENTONCES
+            nota_anterior ← curso.nota
+            curso.nota ← nota_nueva
+            
+            RegistrarCambio(historial_cambios, 
+                           "ACTUALIZACIÓN DE NOTA",
+                           "Nota de '" + nombre_curso + "' actualizada de " 
+                           + nota_anterior + " a " + nota_nueva)
+            
+            RETORNAR verdadero
+        FIN SI
+    FIN PARA
+    
+    RETORNAR falso
+FIN FUNCIÓN
+5.2 Eliminar Curso
+FUNCIÓN EliminarCurso(cursos[], remover) → booleano
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR falso
+    FIN SI
+    
+    remover ← LEER nombre del curso del usuario
+    
+    PARA CADA curso EN cursos HACER
+        SI minúsculas(curso.nombre) = minúsculas(remover) ENTONCES
+            IMPRIMIR "Curso encontrado:", curso.nombre, "-", curso.nota
+            
+            confirmacion ← LEER "¿Está seguro? (S/N)"
+            confirmacion ← MAYÚSCULAS(confirmacion)
+            
+            SI confirmacion = "S" O confirmacion = "SI" ENTONCES
+                RegistrarCambio(historial_cambios, 
+                               "ELIMINACIÓN DE CURSO",
+                               "Curso '" + curso.nombre + "' con nota " 
+                               + curso.nota + " fue eliminado")
+                
+                ELIMINAR curso de cursos
+                IMPRIMIR "Curso eliminado correctamente"
+                RETORNAR verdadero
+            SINO
+                IMPRIMIR "Operación cancelada"
+                RETORNAR falso
+            FIN SI
+        FIN SI
+    FIN PARA
+    
+    IMPRIMIR "El curso no fue encontrado"
+    RETORNAR falso
+FIN FUNCIÓN
+
+6. ORDENAMIENTO
+6.1 Ordenamiento por Burbuja (Por Nota)
+FUNCIÓN OrdenarNota(cursos[])
+    // Ordena de mayor a menor nota
+    // Complejidad: O(n²) peor caso, O(n) mejor caso
+    
+    SI cursos está vacío ENTONCES
+        RETORNAR
+    FIN SI
+    
+    n ← longitud(cursos)
+    IMPRIMIR "ORDENAMIENTO POR BURBUJA"
+    
+    PARA i DESDE 0 HASTA n-1 HACER
+        intercambios ← 0
+        
+        PARA j DESDE 0 HASTA n-i-2 HACER
+            SI cursos[j].nota < cursos[j+1].nota ENTONCES
+                // Intercambiar cursos[j] con cursos[j+1]
+                temp ← cursos[j]
+                cursos[j] ← cursos[j+1]
+                cursos[j+1] ← temp
+                
+                intercambios ← intercambios + 1
+            FIN SI
+        FIN PARA
+        
+        // Optimización: si no hubo intercambios, ya está ordenado
+        SI intercambios = 0 ENTONCES
+            SALIR del bucle
+        FIN SI
+    FIN PARA
+    
+    IMPRIMIR "Cursos ordenados por nota (mayor a menor)"
+    MostrarCurso()
+FIN FUNCIÓN
+6.2 Ordenamiento por Inserción (Por Nombre)
+FUNCIÓN OrdenarCurso(cursos[])
+    // Ordena alfabéticamente por nombre
+    // Complejidad: O(n²) peor caso, O(n) mejor caso
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos para ordenar"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR "ORDENAMIENTO POR INSERCIÓN"
+    
+    PARA i DESDE 1 HASTA longitud(cursos)-1 HACER
+        curso_actual ← cursos[i]
+        j ← i - 1
+        
+        MIENTRAS j >= 0 Y minúsculas(cursos[j].nombre) > minúsculas(curso_actual.nombre) HACER
+            cursos[j+1] ← cursos[j]
+            j ← j - 1
+        FIN MIENTRAS
+        
+        cursos[j+1] ← curso_actual
+    FIN PARA
+    
+    IMPRIMIR "Cursos ordenados alfabéticamente"
+    MostrarCurso()
+FIN FUNCIÓN
+
+7. HISTORIAL DE CAMBIOS (PILA - LIFO)
+7.1 Registrar Cambio
+FUNCIÓN RegistrarCambio(historial[], tipo_accion, detalles)
+    // Estructura PILA: Last In, First Out
+    
+    fecha_actual ← OBTENER fecha y hora actual
+    
+    cambio ← {
+        tipo: tipo_accion,
+        detalles: detalles,
+        fecha: fecha_actual en formato "DD/MM/YYYY HH:MM:SS"
+    }
+    
+    // Agregar al tope de la pila
+    AGREGAR cambio a historial[]
+FIN FUNCIÓN
+7.2 Mostrar Historial Completo
+FUNCIÓN MostrarHistorial(historial[])
+    SI historial está vacío ENTONCES
+        IMPRIMIR "No hay cambios registrados"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR "HISTORIAL DE CAMBIOS"
+    IMPRIMIR "Total de acciones:", longitud(historial)
+    
+    // Recorrer desde el más reciente (tope) al más antiguo (fondo)
+    PARA i DESDE longitud(historial)-1 HASTA 0 DECREMENTANDO HACER
+        cambio ← historial[i]
+        numero ← longitud(historial) - i
+        
+        IMPRIMIR numero, ".", "[", cambio.fecha, "]", cambio.tipo
+        IMPRIMIR "   ", cambio.detalles
+        IMPRIMIR separador
+    FIN PARA
+FIN FUNCIÓN
+7.3 Mostrar Últimos N Cambios
+FUNCIÓN MostrarUltimosCambios(historial[], cantidad)
+    SI historial está vacío ENTONCES
+        IMPRIMIR "No hay cambios registrados"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR "ÚLTIMOS", cantidad, "CAMBIOS"
+    
+    // Calcular índice de inicio
+    inicio ← MAX(0, longitud(historial) - cantidad)
+    
+    // Mostrar desde el más reciente
+    PARA i DESDE longitud(historial)-1 HASTA inicio DECREMENTANDO HACER
+        cambio ← historial[i]
+        
+        IMPRIMIR "[", cambio.fecha, "]", cambio.tipo
+        IMPRIMIR "   ", cambio.detalles
+        IMPRIMIR separador
+    FIN PARA
+FIN FUNCIÓN
+
+8. COLA DE REVISIONES (FIFO)
+FUNCIÓN SimularColaRevision(cursos[])
+    // Estructura COLA: First In, First Out
+    
+    IMPRIMIR "SIMULACIÓN DE COLA DE SOLICITUDES DE REVISIÓN"
+    
+    SI cursos está vacío ENTONCES
+        IMPRIMIR "No hay cursos registrados"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR "Cursos registrados actualmente:"
+    MostrarCurso()
+    
+    cola_revision[] ← lista vacía
+    
+    IMPRIMIR "Ingrese nombres de cursos para enviar a revisión"
+    IMPRIMIR "(Escriba 'fin' cuando termine)"
+    
+    // Fase 1: Agregar cursos a la cola con validación
+    REPETIR
+        nombre_curso ← LEER texto del usuario
+        nombre_curso ← ELIMINAR espacios en blanco
+        
+        SI minúsculas(nombre_curso) = "fin" ENTONCES
+            SALIR del bucle
+        FIN SI
+        
+        SI nombre_curso está vacío ENTONCES
+            IMPRIMIR "Por favor ingrese un nombre válido"
+            CONTINUAR
+        FIN SI
+        
+        curso_encontrado ← falso
+        
+        PARA CADA curso EN cursos HACER
+            SI minúsculas(curso.nombre) = minúsculas(nombre_curso) ENTONCES
+                curso_encontrado ← verdadero
+                // Agregar al final de la cola
+                AGREGAR curso.nombre al final de cola_revision[]
+                IMPRIMIR "Curso agregado a la cola de revisión"
+                SALIR del bucle
+            FIN SI
+        FIN PARA
+        
+        SI NO curso_encontrado ENTONCES
+            IMPRIMIR "El curso no está registrado"
+        FIN SI
+    HASTA que el usuario escriba "fin"
+    
+    // Fase 2: Procesar la cola
+    SI cola_revision está vacía ENTONCES
+        IMPRIMIR "No se ingresaron cursos válidos"
+        RETORNAR
+    FIN SI
+    
+    IMPRIMIR "PROCESANDO SOLICITUDES:"
+    
+    // Procesar en orden FIFO (primero en entrar, primero en salir)
+    MIENTRAS cola_revision NO esté vacía HACER
+        // Quitar del inicio de la cola
+        curso ← QUITAR primer elemento de cola_revision[]
+        IMPRIMIR "Revisando:", curso
+    FIN MIENTRAS
+    
+    IMPRIMIR "Todas las solicitudes han sido procesadas"
+FIN FUNCIÓN
+
+9. FUNCIÓN AUXILIAR
+FUNCIÓN PreguntarContinuar() → booleano
+    REPETIR
+        respuesta ← LEER "¿Desea realizar otra acción? (S/N)"
+        respuesta ← MAYÚSCULAS(respuesta)
+        
+        SI respuesta = "S" O respuesta = "SI" ENTONCES
+            RETORNAR verdadero
+        SINO SI respuesta = "N" O respuesta = "NO" ENTONCES
+            RETORNAR falso
+        SINO
+            IMPRIMIR "Respuesta inválida"
+        FIN SI
+    HASTA que respuesta sea válida
+FIN FUNCIÓN
+
+10. PROGRAMA PRINCIPAL
+INICIO
+    // Declarar estructuras de datos globales
+    cursos[] ← lista vacía
+    historial_cambios[] ← pila vacía
+    repetir ← verdadero
+    
+    MIENTRAS repetir = verdadero HACER
+        MostrarMenu()
+        
+        INTENTAR
+            opcion ← LEER número entero del usuario
+        CAPTURAR error de conversión
+            IMPRIMIR "Por favor ingrese un número válido"
+            CONTINUAR
+        FIN CAPTURA
+        
+        SEGÚN opcion HACER
+            CASO 1:  // Registrar nuevo curso
+                REPETIR
+                    curso ← PedirCurso()
+                    AGREGAR curso a cursos[]
+                    RegistrarCambio(historial_cambios, 
+                                   "REGISTRO DE CURSO",
+                                   "Curso '" + curso.nombre + "' registrado")
+                    IMPRIMIR "Curso guardado exitosamente"
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 2:  // Mostrar todos los cursos
+                MostrarCurso()
+            
+            CASO 3:  // Calcular promedio
+                Promedio()
+            
+            CASO 4:  // Contar aprobados/reprobados
+                AprobadosReprobados()
+            
+            CASO 5:  // Búsqueda lineal
+                REPETIR
+                    SI cursos está vacío ENTONCES
+                        IMPRIMIR "No hay cursos registrados"
+                        SALIR
+                    FIN SI
+                    
+                    MostrarCurso()
+                    busqueda ← LEER nombre del curso
+                    
+                    SI busqueda NO está vacío ENTONCES
+                        BusquedaCursoLineal(cursos, busqueda)
+                    SINO
+                        IMPRIMIR "Ingrese un nombre válido"
+                    FIN SI
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 6:  // Actualizar nota
+                REPETIR
+                    MostrarCurso()
+                    
+                    SI cursos está vacío ENTONCES
+                        SALIR
+                    FIN SI
+                    
+                    nombre_curso ← LEER nombre del curso
+                    
+                    REPETIR
+                        INTENTAR
+                            nueva_nota ← LEER número decimal
+                            SI nueva_nota >= 0 Y nueva_nota <= 100 ENTONCES
+                                SALIR del bucle
+                            SINO
+                                IMPRIMIR "La nota debe estar entre 0 y 100"
+                            FIN SI
+                        CAPTURAR error
+                            IMPRIMIR "Ingrese un número válido"
+                        FIN CAPTURA
+                    HASTA que nota sea válida
+                    
+                    SI ActualizarNotaCurso(cursos, nombre_curso, nueva_nota) ENTONCES
+                        IMPRIMIR "Nota actualizada correctamente"
+                        MostrarCurso()
+                    SINO
+                        IMPRIMIR "El curso no fue encontrado"
+                    FIN SI
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 7:  // Eliminar curso
+                REPETIR
+                    MostrarCurso()
+                    
+                    SI cursos está vacío ENTONCES
+                        SALIR
+                    FIN SI
+                    
+                    EliminarCurso(cursos, nulo)
+                    
+                    SI cursos NO está vacío ENTONCES
+                        MostrarCurso()
+                    FIN SI
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 8:  // Ordenar por nota
+                MostrarCurso()
+                
+                REPETIR
+                    SI cursos está vacío ENTONCES
+                        SALIR
+                    FIN SI
+                    
+                    orden ← LEER "¿Desea ordenar por nota? (S/N)"
+                    
+                    SI orden = "S" O orden = "SI" ENTONCES
+                        OrdenarNota(cursos)
+                        RegistrarCambio(historial_cambios, 
+                                       "ORDENAMIENTO POR NOTA",
+                                       "Cursos ordenados por nota")
+                        SI PreguntarContinuar() = falso ENTONCES
+                            SALIR
+                        FIN SI
+                    SINO SI orden = "N" O orden = "NO" ENTONCES
+                        SALIR
+                    SINO
+                        IMPRIMIR "Opción inválida"
+                    FIN SI
+                HASTA salir del bucle
+            
+            CASO 9:  // Ordenar alfabéticamente
+                REPETIR
+                    SI cursos está vacío ENTONCES
+                        IMPRIMIR "No hay cursos registrados"
+                        SALIR
+                    FIN SI
+                    
+                    MostrarCurso()
+                    
+                    REPETIR
+                        orden ← LEER "¿Desea ordenar alfabéticamente? (S/N)"
+                        
+                        SI orden = "S" O orden = "SI" ENTONCES
+                            OrdenarCurso(cursos)
+                            RegistrarCambio(historial_cambios, 
+                                           "ORDENAMIENTO ALFABÉTICO",
+                                           "Cursos ordenados alfabéticamente")
+                            SALIR del bucle interno
+                        SINO SI orden = "N" O orden = "NO" ENTONCES
+                            IMPRIMIR "Ordenamiento cancelado"
+                            SALIR del bucle interno
+                        SINO
+                            IMPRIMIR "Opción inválida"
+                        FIN SI
+                    HASTA salir
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 10:  // Búsqueda binaria
+                REPETIR
+                    SI cursos está vacío ENTONCES
+                        IMPRIMIR "No hay cursos registrados"
+                        SALIR
+                    FIN SI
+                    
+                    SI NO VerificarOrdenAlfabetico(cursos) ENTONCES
+                        IMPRIMIR "ADVERTENCIA: Los cursos NO están ordenados"
+                        IMPRIMIR "La búsqueda binaria requiere orden alfabético"
+                        IMPRIMIR "Use la opción 9 primero"
+                        SALIR
+                    FIN SI
+                    
+                    MostrarCurso()
+                    busqueda ← LEER nombre del curso
+                    
+                    SI busqueda NO está vacío ENTONCES
+                        IMPRIMIR "Buscando:", busqueda
+                        BusquedaBinaria(cursos, busqueda)
+                    SINO
+                        IMPRIMIR "Ingrese un nombre válido"
+                    FIN SI
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 11:  // Cola de revisiones
+                SimularColaRevision(cursos)
+            
+            CASO 12:  // Historial de cambios
+                REPETIR
+                    IMPRIMIR "HISTORIAL DE CAMBIOS"
+                    IMPRIMIR "1. Ver todo el historial"
+                    IMPRIMIR "2. Ver últimos 5 cambios"
+                    IMPRIMIR "3. Ver últimos 10 cambios"
+                    IMPRIMIR "4. Limpiar historial"
+                    
+                    INTENTAR
+                        opcion_hist ← LEER número entero
+                    CAPTURAR error
+                        IMPRIMIR "Opción inválida"
+                        CONTINUAR
+                    FIN CAPTURA
+                    
+                    SEGÚN opcion_hist HACER
+                        CASO 1:
+                            MostrarHistorial(historial_cambios)
+                        CASO 2:
+                            MostrarUltimosCambios(historial_cambios, 5)
+                        CASO 3:
+                            MostrarUltimosCambios(historial_cambios, 10)
+                        CASO 4:
+                            confirmacion ← LEER "¿Seguro de limpiar? (S/N)"
+                            SI confirmacion = "S" O confirmacion = "SI" ENTONCES
+                                VACIAR historial_cambios[]
+                                IMPRIMIR "Historial limpiado"
+                            SINO
+                                IMPRIMIR "Operación cancelada"
+                            FIN SI
+                        OTRO:
+                            IMPRIMIR "Opción no válida"
+                    FIN SEGÚN
+                HASTA que PreguntarContinuar() = falso
+            
+            CASO 13:  // Salir
+                IMPRIMIR "SALIENDO DEL PROGRAMA"
+                IMPRIMIR "¡Hasta luego!"
+                repetir ← falso
+            
+            OTRO:
+                IMPRIMIR "Opción no válida. Ingrese un número del 1 al 13"
+        FIN SEGÚN
+    FIN MIENTRAS
+FIN
+```
